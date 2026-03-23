@@ -1,0 +1,39 @@
+.app {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  gap: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.status {
+  margin: 0;
+  color: #334155;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

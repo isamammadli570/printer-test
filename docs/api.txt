@@ -1,0 +1,83 @@
+================================================================================
+QZ PRINTER MODULU - PORTABLE API DOKUMENTASIYASI
+================================================================================
+
+Tarix: 2026-03-19
+Versiya: 2.0.0 (portable module)
+
+BU MODULU BASQA LAYIHEYE NECHE KOCHURMEK OLAR
+--------------------------------------------------------------------------------
+1) Bu qovlugu kopyalayin:
+   src/modules/qz-printer/
+
+2) QZ Tray scriptini layihenizin index.html faylina elave edin:
+   <script src="https://cdn.jsdelivr.net/npm/qz-tray@2.2.5/qz-tray.js"></script>
+
+3) Istifade:
+   import { buildReceipt, useQzPrinter } from './modules/qz-printer'
+
+4) ReceiptData verin, sonra:
+   const raw = buildReceipt(data)
+   await print(raw)
+
+QOVLUQ STRUKTURU
+--------------------------------------------------------------------------------
+src/modules/qz-printer/
+  core/
+    index.ts           Core barrel export
+    escpos.ts          ESC/POS command ve format helper-leri
+    receipt-types.ts   ReceiptData ve bagli tiplər
+    receipt-builder.ts buildReceipt(data) -> string
+    qz-client.ts       QZ connect/print funksiyalari
+  react/
+    index.ts           React barrel export
+    use-qz-printer.ts  React hook (status/connect/print)
+  types/
+    qz-tray.d.ts       window.qz tip deklarasiyasi
+  index.ts             Public API (barrel export)
+
+MODULUN PUBLIC API-si (src/modules/qz-printer/index.ts)
+--------------------------------------------------------------------------------
+- buildReceipt(data: ReceiptData): string
+- useQzPrinter(messages?: Partial<QzMessages>): UseQzPrinterResult
+- connectQz(), getDefaultPrinter(), printRaw(), isQzLoaded(), isQzConnected()
+- CMD, qrCommands(), line(), separator()
+- Type export-lar:
+  ReceiptData, ReceiptItem, ReceiptStore, ReceiptPayment,
+  QzMessages, UseQzPrinterResult
+
+GIRDI-CIXDI XULASESI
+--------------------------------------------------------------------------------
+1) buildReceipt
+   Girdi : ReceiptData
+   Cixdi : string (raw ESC/POS)
+
+2) useQzPrinter
+   Girdi : optional mesajlar obyekti
+   Cixdi : {
+     status: string,
+     isConnected: boolean,
+     isPrinting: boolean,
+     connect(): Promise<void>,
+     print(rawData: string, printerName?: string): Promise<void>
+   }
+
+3) printRaw
+   Girdi : printerName + rawData
+   Cixdi : Promise<void>
+
+PRAKTIKI INTEGRASIYA NUSXESI
+--------------------------------------------------------------------------------
+import { buildReceipt, useQzPrinter, type ReceiptData } from './modules/qz-printer'
+
+const receiptData: ReceiptData = { ... }
+const { connect, print } = useQzPrinter()
+await connect()
+await print(buildReceipt(receiptData))
+
+QEYD
+--------------------------------------------------------------------------------
+- Modul React UI-dan ayridir; App sadece istehlakchi qatdir.
+- Core fayllarini ayrıca Node/Browser servis qatinda da istifade etmek olar.
+- QZ Tray local app aciq olmalidir.
+================================================================================
